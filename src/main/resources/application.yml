@@ -1,0 +1,67 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /bookstore
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: @project.name@
+    description: @project.description@
+  build:
+    version: @project.version@
+
+  data:
+    jpa:
+    repositories:
+    bootstrap-mode: default
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/bookstore
+    username: root
+    password: P@55word
+    driverClassName: com.mysql.cj.jdbc.Driver
+
+    jpa:
+      show-sql: false
+      generate-ddl: false
+      open-in-view: false
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        ddl-auto: none
+      properties:
+        hibernate:
+          format_sql: false
+          jdbc:
+            time_zone: UTC
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: health
+
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
+#springdoc:
+#  packagesToScan: bookstore
+#  pathsToMatch: /swagger-ui, v3/api-docs, /** #/bookstore/rest/**
+#  swagger-ui-path: /swagger-ui/index.html
+
+log:
+  service: ${spring.application.name}
+  appender: CONSOLE
+  level: INFO
+logging:
+  level:
+    root: INFO
+  file:
+    name: ${spring.application.name}.log
