@@ -50,11 +50,11 @@ public class OrderItem implements Serializable {
     @Column(insertable = false, updatable = false)
     private Long fkIsbn;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.REMOVE, optional = false)
     @JoinColumn(name="fkOrderDetailsId")
     private OrderDetails orderDetails;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "fkIsbn")
     private Book book;
 

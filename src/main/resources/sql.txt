@@ -1,163 +1,166 @@
-########################## BOOKSTORE SCHEMA ##########################
+########SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS;
+       #SET FOREIGN_KEY_CHECKS=0;
+       #SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 
-#DROP SCHEMA IF EXISTS `bookstore` ;
-#CREATE SCHEMA IF NOT EXISTS `bookstore` DEFAULT CHARACTER SET latin1 ;
-use bookstore;
-
-
-### BOOK TABLE ###
-
-DROP TABLE IF EXISTS book;
-CREATE TABLE IF NOT EXISTS book
-(
-isbn bigint NOT NULL auto_increment,
-category enum(
-    'NONE',
-    'ARTS_AND_MUSIC',
-    'BIOGRAPHIES',
-    'KIDS',
-    'TECHNOLOGY',
-    'COOKING',
-    'EDUCATIONAL',
-    'FICTION',
-    'HEALTH_AND_FITNESS',
-    'HISTORY',
-    'HORROR',
-    'LITERATURE',
-    'ROMANCE',
-    'SCIENCE_FICTION',
-    'TRAVEL',
-    'YOUNG_ADULT') NOT NULL,
-title varchar(255) NOT NULL,
-author varchar(255) NOT NULL,
-price decimal(19,2) NOT NULL,
-stock integer NOT NULL,
-PRIMARY KEY (isbn)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
+       #DROP SCHEMA IF EXISTS `bookstore` ;
+       #CREATE SCHEMA IF NOT EXISTS `bookstore` DEFAULT CHARACTER SET latin1 ;
+       use bookstore;
 
 
-### USER TABLE ###
+       ### BOOK TABLE ###
 
-DROP TABLE IF EXISTS users;
-CREATE TABLE IF NOT EXISTS users
-(
-user_id bigint NOT NULL auto_increment,
-first_name varchar(255) NOT NULL,
-last_name varchar(255) NOT NULL,
-address_line_1 varchar(255) NOT NULL,
-address_line_2 varchar(255) NOT NULL,
-post_code varchar(255) NOT NULL,
-PRIMARY KEY (user_id)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
-
-
-### ORDER DETAILS TABLE ###
-
-DROP TABLE IF EXISTS order_details;
-CREATE TABLE IF NOT EXISTS order_details
-(
-order_details_id bigint NOT NULL auto_increment,
-fk_user_id bigint NOT NULL,
-total_price decimal NOT NULL,
-order_date datetime NOT NULL,
-PRIMARY KEY (order_details_id)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
-
-alter table order_details
-add foreign key (fk_user_id) references users(user_id);
+       DROP TABLE IF EXISTS book;
+       CREATE TABLE IF NOT EXISTS book
+       (
+       isbn bigint NOT NULL auto_increment,
+       category enum(
+           'NONE',
+           'ARTS_AND_MUSIC',
+           'BIOGRAPHIES',
+           'KIDS',
+           'TECHNOLOGY',
+           'COOKING',
+           'EDUCATIONAL',
+           'FICTION',
+           'HEALTH_AND_FITNESS',
+           'HISTORY',
+           'HORROR',
+           'LITERATURE',
+           'ROMANCE',
+           'SCIENCE_FICTION',
+           'TRAVEL',
+           'YOUNG_ADULT') NOT NULL,
+       title varchar(255) NOT NULL,
+       author varchar(255) NOT NULL,
+       price decimal(19,2) NOT NULL,
+       stock integer NOT NULL,
+       PRIMARY KEY (isbn)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
 
 
-### ORDER ITEM TABLE ###
+       ### USER TABLE ###
 
-DROP TABLE IF EXISTS order_item;
-CREATE TABLE IF NOT EXISTS order_item
-(
-order_item_id bigint NOT NULL auto_increment,
-fk_order_details_id bigint NOT NULL,
-fk_isbn bigint NOT NULL,
-PRIMARY KEY (order_item_id)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
-
-alter table order_item
-add foreign key (fk_order_details_id) references order_details(order_details_id);
-alter table order_item
-add foreign key (fk_isbn) references book(isbn);
+       DROP TABLE IF EXISTS users;
+       CREATE TABLE IF NOT EXISTS users
+       (
+       user_id bigint NOT NULL auto_increment,
+       first_name varchar(255) NOT NULL,
+       last_name varchar(255) NOT NULL,
+       address_line_1 varchar(255) NOT NULL,
+       address_line_2 varchar(255) NOT NULL,
+       post_code varchar(255) NOT NULL,
+       PRIMARY KEY (user_id)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
 
 
-### BASKET TABLE ###
+       ### ORDER DETAILS TABLE ###
 
-DROP TABLE IF EXISTS basket;
-CREATE TABLE IF NOT EXISTS basket
-(
-basket_id bigint NOT NULL auto_increment,
-fk_user_id bigint NOT NULL,
-total_price decimal NOT NULL,
-PRIMARY KEY (basket_id)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
+       DROP TABLE IF EXISTS order_details;
+       CREATE TABLE IF NOT EXISTS order_details
+       (
+       order_details_id bigint NOT NULL auto_increment,
+       fk_user_id bigint,
+       total_order_price decimal NOT NULL,
+       order_date datetime NOT NULL,
+       PRIMARY KEY (order_details_id)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
 
-alter table basket
-add foreign key (fk_user_id) references users(user_id);
-
-
-### BASKET ITEM TABLE ###
-
-DROP TABLE IF EXISTS basket_item;
-CREATE TABLE IF NOT EXISTS basket_item
-(
-basket_item_id bigint NOT NULL auto_increment,
-fk_basket_id bigint NOT NULL,
-fk_isbn bigint NOT NULL, #DEFAULT 0,
-quantity integer NOT NULL,
-PRIMARY KEY (basket_item_id)
-)
-engine=InnoDB
-AUTO_INCREMENT = 1
-DEFAULT CHARACTER SET = latin1;
-
-alter table basket_item
-add foreign key (fk_basket_id) references basket(basket_id);
-alter table basket_item
-add foreign key (fk_isbn) references book(isbn);
+       alter table order_details
+       add foreign key (fk_user_id) references users(user_id);
 
 
-## INSERT DATA ##
+       ### ORDER ITEM TABLE ###
 
-INSERT INTO book (isbn, category, title, author, price, stock)
-VALUES
-(0001, 'KIDS', 'Peppa Pig', 'Miss Pig', 4.99, 10),
-(0002, 'COOKING', 'Italian Dinners', 'J Oliver', 24.99, 25),
-(0003, 'SCIENCE_FICTION', 'Mars Robots', 'Mr Bean', 11.99, 50);
+       DROP TABLE IF EXISTS order_item;
+       CREATE TABLE IF NOT EXISTS order_item
+       (
+       order_item_id bigint NOT NULL auto_increment,
+       fk_order_details_id bigint,
+       fk_isbn bigint,
+       PRIMARY KEY (order_item_id)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
 
-INSERT INTO users (user_id, first_name, last_name, address_line_1, address_line_2, post_code)
-VALUES
-(0001, 'John', 'Smith', '10 Apple Lane', 'London', 'SW12PQ'),
-(0002, 'Jane', 'Richards', '20 Orange Close', 'London', 'SW14TY'),
-(0003, 'James', 'Jones', '30 Cherry Tree Road', 'London', 'SW18RP');
+       alter table order_item
+       add foreign key (fk_order_details_id) references order_details(order_details_id);
+       alter table order_item
+       add foreign key (fk_isbn) references book(isbn);
 
 
-### FOR DROPPING FK's ###
+       ### BASKET TABLE ###
 
-alter table order_details drop foreign key order_details_ibfk_1;
-alter table order_item drop foreign key order_item_ibfk_1;
-alter table order_item drop foreign key order_item_ibfk_2;
-alter table basket drop foreign key basket_ibfk_1;
-alter table basket_item drop foreign key basket_item_ibfk_1;
-alter table basket_item drop foreign key basket_item_ibfk_2;
+       DROP TABLE IF EXISTS basket;
+       CREATE TABLE IF NOT EXISTS basket
+       (
+       basket_id bigint NOT NULL auto_increment,
+       fk_user_id bigint,
+       PRIMARY KEY (basket_id)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
 
-#################################################################
+       alter table basket
+       add foreign key (fk_user_id) references users(user_id);
+
+
+       ### BASKET ITEM TABLE ###
+
+       DROP TABLE IF EXISTS basket_item;
+       CREATE TABLE IF NOT EXISTS basket_item
+       (
+       basket_item_id bigint NOT NULL auto_increment,
+       fk_basket_id bigint,
+       fk_isbn bigint,
+       quantity integer NOT NULL,
+       total_price decimal NOT NULL,
+       PRIMARY KEY (basket_item_id)
+       )
+       engine=InnoDB
+       AUTO_INCREMENT = 1
+       DEFAULT CHARACTER SET = latin1;
+
+       alter table basket_item
+       add foreign key (fk_basket_id) references basket(basket_id);
+       alter table basket_item
+       add foreign key (fk_isbn) references book(isbn);
+
+
+       ## INSERT DATA ##
+
+       INSERT INTO book (isbn, category, title, author, price, stock)
+       VALUES
+       (0001, 'KIDS', 'Peppa Pig', 'Miss Pig', 4.99, 10),
+       (0002, 'COOKING', 'Italian Dinners', 'J Oliver', 24.99, 25),
+       (0003, 'SCIENCE_FICTION', 'Mars Robots', 'Mr Bean', 11.99, 50);
+
+       INSERT INTO users (user_id, first_name, last_name, address_line_1, address_line_2, post_code)
+       VALUES
+       (0001, 'John', 'Smith', '10 Apple Lane', 'London', 'SW12PQ'),
+       (0002, 'Jane', 'Richards', '20 Orange Close', 'London', 'SW14TY'),
+       (0003, 'James', 'Jones', '30 Cherry Tree Road', 'London', 'SW18RP');
+
+
+       ### FOR DROPPING FK's ###
+
+       alter table order_details drop foreign key order_details_ibfk_1;
+       alter table order_item drop foreign key order_item_ibfk_1;
+       alter table order_item drop foreign key order_item_ibfk_2;
+       alter table basket drop foreign key basket_ibfk_1;
+       alter table basket_item drop foreign key basket_item_ibfk_1;
+       alter table basket_item drop foreign key basket_item_ibfk_2;
+
+
+       ##################################################################
 
