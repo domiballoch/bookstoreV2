@@ -248,4 +248,14 @@ public class BasketServiceImpl implements BasketService {
         log.info("Basket cleared");
     }
 
+    /**
+     * Clears basket after order
+     */
+    @Transactional
+    @Override
+    public void clearBasketAfterOrder(List<BasketItem> basketItems) {
+        basketRepository.deleteAll();
+        log.info("Basket cleared");
+    }
+
 }

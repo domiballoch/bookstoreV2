@@ -47,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetails submitOrder(Users user) {
         OrderItem orderItem = null;
         OrderDetails orderDetails;
+        List<OrderItem> orderItems = new ArrayList<>();
 
         //get basket to add to order
         List<BasketItem> basketItems = new ArrayList<>();
@@ -81,10 +82,12 @@ public class OrderServiceImpl implements OrderService {
                         .book(basketItem.getBook())
                         .quantity(basketItem.getQuantity())
                         .totalPrice(basketItem.getTotalPrice()).build();
+                //add each orderItem to orderDetails to return in response
+                orderItems.add(orderItem);
             }
 
             //set orderDetails with orderItems - bi-directional
-            orderDetails.setOrderItems(Arrays.asList(orderItem));
+            orderDetails.setOrderItems(orderItems);
 
             //Save orderDetails - cascade to OrderItems (parent/child)
             try {
@@ -94,7 +97,7 @@ public class OrderServiceImpl implements OrderService {
             }
             log.info("Order complete: {}", orderDetails);
         }
-        basketService.clearBasket(basketItems);
+        basketService.clearBasketAfterOrder(basketItems);
 
         return orderDetails;
     }

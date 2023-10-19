@@ -26,4 +26,6 @@ public interface BasketService {
 
     void clearBasket(List<BasketItem> basketItems);
 
+    void clearBasketAfterOrder(List<BasketItem> basketItems);
+
 }
