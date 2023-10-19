@@ -1,6 +1,7 @@
 [![Actions Status](https://github.com/domiballoch/bookstoreV2/actions/workflows/maven.yml/badge.svg)](https://github.com/domiballoch/bookstoreV2/actions)
-[![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstoreV2)
-[![GitHub version](https://badge.fury.io/gh/domiballoch%2FbookstoreV2.svg)](https://badge.fury.io/gh/domiballoch%2FbookstoreV2)
+[![GitHub latest commit](https://badgen.net/github/last-commit/Naereen/Strapdown.js)](https://github.com/domiballoch/bookstoreV2/commit/)
+[![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=690385f2-097d-4cb0-b22c-1409f945ec81)](https://codecov.io/gh/domiballoch/bookstoreV2)
+[![GitHub version](https://badge.fury.io/gh/domiballoch%2FbookstoreV2.svg)](https://github.com/domiballoch/bookstoreV2/version)
 [![forthebadge](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)](https://forthebadge.com)
 
 <h1>Bookstore service</h1>
