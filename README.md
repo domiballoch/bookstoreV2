@@ -1,6 +1,6 @@
-[![Actions Status](https://github.com/domiballoch/bookstore/actions/workflows/maven.yml/badge.svg)](https://github.com/domiballoch/bookstore/actions)
-[![codecov](https://codecov.io/gh/domiballoch/bookstore/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstore)
-[![GitHub version](https://badge.fury.io/gh/domiballoch%2Fbookstore.svg)](https://badge.fury.io/gh/domiballoch%2Fbookstore)
+[![Actions Status](https://github.com/domiballoch/bookstoreV2/actions/workflows/maven.yml/badge.svg)](https://github.com/domiballoch/bookstoreV2/actions)
+[![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstoreV2)
+[![GitHub version](https://badge.fury.io/gh/domiballoch%2FbookstoreV2.svg)](https://badge.fury.io/gh/domiballoch%2FbookstoreV2)
 [![forthebadge](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)](https://forthebadge.com)
 
 <h1>Bookstore service</h1>
