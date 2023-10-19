@@ -43,11 +43,11 @@ public class Basket {
     @Column(name = "basket_id")
     private Long basketId;
 
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    @JsonIgnore
-    @Column(insertable = false, updatable = false)
-    private Long fkUserId;
+//    @Getter(AccessLevel.NONE)
+//    @Setter(AccessLevel.NONE)
+//    @JsonIgnore
+//    @Column(insertable = false, updatable = false)
+//    private Long fkUserId;
 
     @OneToMany(mappedBy = "basket", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BasketItem> basketItems = new ArrayList<>();

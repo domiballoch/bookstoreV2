@@ -2,7 +2,6 @@ package dom.bookstore.service;
 
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
-import dom.bookstore.domain.Users;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +24,6 @@ public interface BasketService {
 
     List<BasketItem> removeBookFromBasket(long isbn);
 
-    //void clearBasketAfterOrder();
+    void clearBasket(List<BasketItem> basketItems);
 
-    //void clearBasket();
 }

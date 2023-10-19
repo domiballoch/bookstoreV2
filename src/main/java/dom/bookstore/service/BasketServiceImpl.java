@@ -3,11 +3,9 @@ package dom.bookstore.service;
 import dom.bookstore.dao.BasketItemRepository;
 import dom.bookstore.dao.BasketRepository;
 import dom.bookstore.dao.BookRepository;
-import dom.bookstore.dao.UserRepository;
 import dom.bookstore.domain.Basket;
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
-import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreStockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -188,7 +186,6 @@ public class BasketServiceImpl implements BasketService {
         int updatedStock = book.getStock() + quantity;
         //fix for javax constraint violation on book entity when updating existing data in row
         Book updatededBook = book.toBuilder().stock(updatedStock).build();
-        //int currentStock = updatededBook.getStock();
         bookRepository.updateBookStock(updatedStock, book.getIsbn());
         log.info("Stock replenished from {} to {}", currentStock, updatedStock);
 
@@ -206,6 +203,7 @@ public class BasketServiceImpl implements BasketService {
      * @param isbn
      * @return List<BasketItem>
      */
+    @Transactional
     @Override
     public List<BasketItem> removeBookFromBasket(long isbn) {
         log.info("Removing book from basket: {}", isbn);
@@ -240,23 +238,14 @@ public class BasketServiceImpl implements BasketService {
     /**
      * Clears basket after order
      */
-//    public void clearBasketAfterOrder() {
-//        basketRepository.delete(basket);
-//        //basketOld.getBooks().clear();
-//        log.info("Basket cleared");
-//    }
-
-    /**
-     * Clears basket and resets stock
-     */
-//    @Override
-//    public void clearBasket() {
-//        basket.getBasketItems().forEach(basketItem -> basketItem.getBook().setStock(
-//                basketItem.getBook().getStock()+1));
-//        basketRepository.delete(basket);
-//        //basketOld.getBooks().forEach(book -> book.setStock(book.getStock()+1));
-//        //basketOld.getBooks().clear();
-//        log.info("Basket cleared and stock reset");
-//    }
+    @Transactional
+    @Override
+    public void clearBasket(List<BasketItem> basketItems) {
+        for(BasketItem basketItem : basketItems) {
+            replenishStock(basketItem.getBook(), basketItem.getQuantity());
+        }
+        basketRepository.deleteAll();
+        log.info("Basket cleared");
+    }
 
 }

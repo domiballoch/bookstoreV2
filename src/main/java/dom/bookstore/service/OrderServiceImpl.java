@@ -1,10 +1,7 @@
 package dom.bookstore.service;
 
 import dom.bookstore.dao.BasketItemRepository;
-import dom.bookstore.dao.BasketRepository;
-import dom.bookstore.dao.BookRepository;
 import dom.bookstore.dao.OrderDetailsRepository;
-import dom.bookstore.dao.OrderItemRepository;
 import dom.bookstore.dao.UserRepository;
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.OrderDetails;
@@ -43,11 +40,6 @@ public class OrderServiceImpl implements OrderService {
         this.userRepository = userRepository;
         this.orderDetailsRepository = orderDetailsRepository;
         this.basketService = basketService;
-    }
-
-    @Override
-    public void checkout() {
-
     }
 
     @Transactional
@@ -102,8 +94,7 @@ public class OrderServiceImpl implements OrderService {
             }
             log.info("Order complete: {}", orderDetails);
         }
-        //bookService.updateBookStock(basketOld.getBooks());
-        //basketService.clearBasketAfterOrder();
+        basketService.clearBasket(basketItems);
 
         return orderDetails;
     }
