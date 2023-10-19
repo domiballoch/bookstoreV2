@@ -34,7 +34,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"basketId"})
-@ToString(of = {"basketId", "totalPrice", "basketItemList", "users"})
+@ToString(of = {"basketId", "basketItems"})
 public class Basket {
 
     @JsonIgnore
@@ -49,20 +49,7 @@ public class Basket {
     @Column(insertable = false, updatable = false)
     private Long fkUserId;
 
-//    @Column(name = "total_price")
-//    private BigDecimal totalPrice;
-
-    //@OneToMany(mappedBy = "basketItemId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
-    @JoinColumn(name = "fkBasketId")
+    @OneToMany(mappedBy = "basket", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BasketItem> basketItems = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "fkUserId")
-    private Users users;
-
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "fkUserId", referencedColumnName = "user_id")
-//    private Users users;
 }

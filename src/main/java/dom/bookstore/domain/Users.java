@@ -1,6 +1,7 @@
 package dom.bookstore.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +36,7 @@ import java.util.Set;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"userId"})
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@ToString(of = {"userId", "firstName", "lastName", "addressLine1", "addressLine2", "postCode"})
+@ToString(of = {"userId", "firstName", "lastName", "addressLine1", "addressLine2", "postCode", "orderDetails"})
 public class Users implements Serializable {
 
     @Id
@@ -73,13 +74,8 @@ public class Users implements Serializable {
     @Column(name = "post_code")
     private String postCode;
 
-    @OneToMany(mappedBy = "orderDetailsId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List <OrderDetails> orderDetails;
-
-    @OneToMany(mappedBy = "basketId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<Basket> basket;
-
-//    @OneToOne(mappedBy = "users", fetch = FetchType.LAZY)
-//    private Basket basket;
 
 }

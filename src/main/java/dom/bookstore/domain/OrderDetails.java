@@ -29,6 +29,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * If experiencing JSON serialisation exception with LAZY loading.
+ * Either change to EAGER if you need the Entity info always available as part of the response or if performing calculations
+ * Otherwise use @JsonIgnore if its not required in the response
+ * Alternatively use @JsonManagedReference (Parent) and @JsonBackReference (Child)
+ */
 @Builder(toBuilder = true)
 @Data
 @Entity
@@ -36,9 +42,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"orderDetailsId"})
-@ToString(of = {"orderDetailsId", "totalOrderPrice", "orderDate", "orderItemList", "users"})
+@ToString(of = {"orderDetailsId", "totalOrderPrice", "orderDate", "users", "orderItems"})
 public class OrderDetails implements Serializable {
 
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_details_id")
@@ -57,11 +64,11 @@ public class OrderDetails implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderDate;
 
-    @OneToMany(mappedBy = "orderItemId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
-    private List<OrderItem> orderItems = new ArrayList<>();
-
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "fkUserId")
     private Users users;
+
+    @OneToMany(mappedBy = "orderDetails", fetch = FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
 }

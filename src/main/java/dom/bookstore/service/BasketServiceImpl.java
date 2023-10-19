@@ -15,11 +15,13 @@ import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static dom.bookstore.utils.BookStoreConstants.ERROR_SAVING_ENTITY;
 import static dom.bookstore.utils.BookStoreConstants.NOT_ENOUGH_STOCK;
 import static dom.bookstore.utils.BookStoreConstants.OUT_OF_STOCK;
 
@@ -30,14 +32,12 @@ public class BasketServiceImpl implements BasketService {
       private BasketRepository basketRepository;
       private BasketItemRepository basketItemRepository;
       private BookRepository bookRepository;
-      private UserRepository userRepository;
 
       public BasketServiceImpl(BasketRepository basketRepository, BasketItemRepository basketItemRepository,
-                               BookRepository bookRepository, UserRepository userRepository) {
+                               BookRepository bookRepository) {
           this.basketRepository = basketRepository;
           this.basketItemRepository = basketItemRepository;
           this.bookRepository = bookRepository;
-          this.userRepository = userRepository;
     }
 
     /**
@@ -65,35 +65,37 @@ public class BasketServiceImpl implements BasketService {
      */
     @Transactional
     @Override
-    public BasketItem addBookToBasket(long isbn, int quantity, Users user) {  //add user login/logout and add user to session
+    public BasketItem addBookToBasket(long isbn, int quantity) {
+        BasketItem basketItem;
+        Basket basket;
+
         //Check book is in stock
         inStock(isbn, quantity);
 
         //Fetch book if exists - check made via inStock()
         Optional<Book> book = bookRepository.findById(isbn);
 
-        //temp user path variable until login/session set up
-        Optional<Users> foundUser = userRepository.findById(user.getUserId());
-        //userRepository.save(foundUser.get());
-
         //Reduce stock of added book based on quantity added if book is still in stock
         Book updatededBook = reduceStock(book.get(), quantity);
 
-        BasketItem basketItem = BasketItem.builder()
+        basket = Basket.builder().build();
+
+        //set basketItems
+        basketItem = BasketItem.builder()
+                .basket(basket) //set basketItem with basket - bi-directional
                 .book(updatededBook)
                 .quantity(quantity)
                 .totalPrice(calculateTotalPrice(updatededBook, quantity))
                 .build();
-        Basket basket = Basket.builder()
-                .basketItems(Arrays.asList(basketItem))
-                .users(foundUser.get())
-                .build();
+
+        //set basket with basketItems - bi-directional
+        basket.setBasketItems(Arrays.asList(basketItem));
 
         //Save basket - cascade to basket item (parent/child)
         try {
             basketRepository.save(basket);
         } catch (Exception e) {
-            log.error("Error saving entity", e.getMessage());
+            log.error(ERROR_SAVING_ENTITY, e.getMessage());
         }
         log.info("Book added to basket: {}", updatededBook);
 
@@ -132,7 +134,9 @@ public class BasketServiceImpl implements BasketService {
      */
     @Override
     public BigDecimal calculateTotalPrice(Book book, int quantity) {
-        return book.getPrice().multiply(BigDecimal.valueOf(quantity));
+        return book.getPrice().multiply(new BigDecimal(quantity)
+                .setScale(2, RoundingMode.HALF_UP)
+                .stripTrailingZeros());
     }
 
     /**
@@ -146,7 +150,7 @@ public class BasketServiceImpl implements BasketService {
         return basketItems.stream()
                 .map(BasketItem::getBook)
                 .map(Book::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add); //quantity should multiply
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**

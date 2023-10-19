@@ -12,4 +12,5 @@ public class BookStoreConstants {
     public static final String NOT_ENOUGH_STOCK = "Book out of stock";
     public static final String BASKET_IS_EMPTY = "Basket is empty";
     public static final String INCORRECT_DETAILS = "Incorrect Details";
+    public static final String ERROR_SAVING_ENTITY = "Error saving entity";
 }

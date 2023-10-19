@@ -14,6 +14,7 @@ import lombok.ToString;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,7 +32,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"basketItemId"})
-@ToString(of = {"basketItemId", "quantity", "book"})
+@ToString(of = {"basketItemId", "quantity", "totalPrice", "book"})
 public class BasketItem {
 
     @JsonIgnore
@@ -59,11 +60,11 @@ public class BasketItem {
     private BigDecimal totalPrice;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.REMOVE, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name="fkBasketId")
     private Basket basket;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "fkIsbn")
     private Book book;
 }

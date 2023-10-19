@@ -11,7 +11,7 @@ public interface BasketService {
 
     List<BasketItem> getBasket();
 
-    BasketItem addBookToBasket(long isbn, int quantity, Users user);
+    BasketItem addBookToBasket(long isbn, int quantity);
 
     boolean inStock(long isbn, int quantity);
 

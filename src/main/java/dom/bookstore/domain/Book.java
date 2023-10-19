@@ -76,11 +76,11 @@ public class Book implements Serializable {
     private int stock;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "basketItemId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<BasketItem> basketItems = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "orderItemId", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
+    @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
 }

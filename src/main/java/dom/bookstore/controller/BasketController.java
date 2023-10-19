@@ -40,9 +40,8 @@ public class BasketController {
     }
 
     @PostMapping(value = "/addBookToBasket/{isbn}/{quantity}/{user}")
-    public ResponseEntity<BasketItem> addBookToBasket(@PathVariable long isbn, @PathVariable int quantity,
-                                                      @PathVariable Users user) {
-        BasketItem basketItem = basketService.addBookToBasket(isbn, quantity, user);
+    public ResponseEntity<BasketItem> addBookToBasket(@PathVariable long isbn, @PathVariable int quantity) {
+        BasketItem basketItem = basketService.addBookToBasket(isbn, quantity);
         return new ResponseEntity<>(basketItem, HttpStatus.OK);
     }
 
