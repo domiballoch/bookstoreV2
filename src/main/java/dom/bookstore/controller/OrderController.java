@@ -22,6 +22,7 @@ public class OrderController {
     public OrderController(OrderService orderService) {
         this.orderService = orderService;
     }
+
     @PostMapping(value = "/submitOrder")
     public ResponseEntity<OrderDetails> submitOrder(@RequestBody Users user) {
         final OrderDetails orderDetails = orderService.submitOrder(user);

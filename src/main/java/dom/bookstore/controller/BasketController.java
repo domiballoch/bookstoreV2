@@ -1,8 +1,6 @@
 package dom.bookstore.controller;
 
-import dom.bookstore.domain.Basket;
 import dom.bookstore.domain.BasketItem;
-import dom.bookstore.domain.Users;
 import dom.bookstore.service.BasketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,12 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/rest", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -34,8 +27,6 @@ public class BasketController {
     @GetMapping(value = "/getBasket")
     public ResponseEntity<List<BasketItem>> getBasket() {
         List<BasketItem> basketItems = basketService.getBasket();
-        //final BigDecimal totalPrice = basketService.calculateBasket(basket);
-        //return new ResponseEntity<>(new ArrayList<>(Arrays.asList(basketItems, totalPrice)), HttpStatus.OK);
         return new ResponseEntity<>(basketItems, HttpStatus.OK);
     }
 

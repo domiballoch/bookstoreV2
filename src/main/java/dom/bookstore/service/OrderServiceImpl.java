@@ -16,7 +16,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     @Override
     public OrderDetails submitOrder(Users user) {
-        OrderItem orderItem = null;
+        OrderItem orderItem;
         OrderDetails orderDetails;
         List<OrderItem> orderItems = new ArrayList<>();
 
