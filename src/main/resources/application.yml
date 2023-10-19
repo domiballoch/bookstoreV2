@@ -56,12 +56,12 @@ spring:
 #  pathsToMatch: /swagger-ui, v3/api-docs, /** #/bookstore/rest/**
 #  swagger-ui-path: /swagger-ui/index.html
 
-log:
-  service: ${spring.application.name}
-  appender: CONSOLE
-  level: INFO
-logging:
-  level:
-    root: INFO
-  file:
-    name: ${spring.application.name}.log
+#log:
+#  service: ${spring.application.name}
+#  appender: CONSOLE
+#  level: INFO
+#logging:
+#  level:
+#    root: INFO
+#  file:
+#    name: ${spring.application.name}.log
