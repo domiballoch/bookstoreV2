@@ -2,8 +2,6 @@
 [![GitHub commits](https://badgen.net/github/commits/domiballoch/bookstoreV2)](https://gitHub.com/domiballoch/bookstoreV2/)
 [![GitHub latest commit](https://badgen.net/github/last-commit/domiballoch/bookstoreV2)](https://gitHub.com/domiballoch/bookstoreV2/commit/)
 [![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstoreV2)
-[![GitHub version](https://badge.fury.io/gh/Naereen%2FStrapDown.js.svg)](https://github.com/domiballoch/bookstoreV2)
-[![forthebadge](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)](https://forthebadge.com)
 
 <h1>Bookstore service</h1>
 
