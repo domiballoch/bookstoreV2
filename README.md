@@ -9,6 +9,9 @@
 
 <h4>Description</h4>
 Bookstore with rest functionality using get, post, delete, put
+<br/>Services for books, users, admin, basket and order
+<br/>Design enables stock to go up and down per quantity when book(basket item) placed in basket(persisted)
+<br/>Order details with user details is then persisted and basket is deleted
 <br/>To view API documentation - run project then visit: http://localhost:8080/bookstore/swagger-ui/index.html
 
 <h4>Prerequisites</h4>
@@ -26,6 +29,8 @@ mvn clean install
 
 <h4>Database schema</h4
 execute bookstore.sql
+<br/>schema in sql.txt file in resources
+<br/>uses JPA bi-directional one-to-many relationships
 
 <h4>Connection</h4>
 Login with root or create user and change yml
