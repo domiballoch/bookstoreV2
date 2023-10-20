@@ -2,6 +2,8 @@
 [![GitHub commits](https://badgen.net/github/commits/domiballoch/bookstoreV2)](https://gitHub.com/domiballoch/bookstoreV2/)
 [![GitHub latest commit](https://badgen.net/github/last-commit/domiballoch/bookstoreV2)](https://gitHub.com/domiballoch/bookstoreV2/commit/)
 [![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstoreV2)
+[![GitHub version](https://badge.fury.io/gh/domiballoch%2FbookstoreV2.js.svg)](https://github.com/domiballoch/bookstoreV2)
+
 
 <h1>Bookstore service</h1>
 
