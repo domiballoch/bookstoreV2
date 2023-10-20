@@ -45,7 +45,6 @@ import java.util.List;
 @ToString(of = {"orderDetailsId", "totalOrderPrice", "orderDate", "users", "orderItems"})
 public class OrderDetails implements Serializable {
 
-    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_details_id")

@@ -41,6 +41,38 @@ public class OrderServiceImpl implements OrderService {
         this.basketService = basketService;
     }
 
+    /**
+     * Returns all orders
+     *
+     * @return
+     */
+    @Override
+    public List<OrderDetails> findAllOrders() {
+        log.info("Finding all orders");
+        return orderDetailsRepository.findAll();
+    }
+
+    /**
+     * Finds order by orderDetailsId
+     *
+     * @param orderDetailsId
+     * @return
+     */
+    @Override
+    public Optional<OrderDetails> findOrderById(final long orderDetailsId) {
+        log.info("Finding order by orderDetailsId: {}", orderDetailsId);
+        return orderDetailsRepository.findById(orderDetailsId);
+    }
+
+    /**
+     * Checkout can be implemented by moving all the code apart from the save order details
+     * and returning the order details in the checkout response.
+     * Remove orderItem from checkout and replenish stock can be taken from basket service
+     * For ease of use implementation just contains basket and order
+     */
+    @Override
+    public OrderDetails checkout() {return null;}
+
     @Transactional
     @Override
     public OrderDetails submitOrder(Users user) {
@@ -111,4 +143,5 @@ public class OrderServiceImpl implements OrderService {
         final Optional<Users> foundUser = userRepository.findById(user.get().getUserId());
         return user.get().equals(foundUser.get()) ? true : false;
     }
+
 }
