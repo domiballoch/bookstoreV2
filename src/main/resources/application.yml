@@ -46,10 +46,10 @@ spring:
         exposure:
           include: health
 
-  mvc:
-    view:
-      prefix: /WEB-INF/jsp/
-      suffix: .jsp
+#  mvc:
+#    view:
+#      prefix: /WEB-INF/jsp/
+#      suffix: .jsp
 
 #springdoc:
 #  packagesToScan: bookstore
