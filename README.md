@@ -38,4 +38,5 @@ Login with root or create user and change yml
 <br/>username: root
 
 <h4>Logging level</h4>
-info - set filepath as/if required
+Uses logback with console and rolling appender to project path
+<br/>level: info - set filepath as/if required
