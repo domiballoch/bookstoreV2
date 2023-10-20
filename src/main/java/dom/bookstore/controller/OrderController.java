@@ -4,6 +4,7 @@ import dom.bookstore.domain.OrderDetails;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.OrderService;
+import dom.bookstore.utils.BookStoreUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class OrderController {
     public ResponseEntity<List<OrderDetails>> findAllOrders() {
         List<OrderDetails> orderDetails = orderService.findAllOrders();
         if(orderDetails.isEmpty()) {
-            noResultsFound(orderDetails, "All orders");
+            BookStoreUtils.noResultsFound(orderDetails, "All orders");
         }
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
@@ -55,8 +56,4 @@ public class OrderController {
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
-    private <T>  ResponseEntity<T> noResultsFound(T t, T r) {
-        log.info("No results found: {}", r);
-        return new ResponseEntity<T>(t, HttpStatus.NOT_FOUND);
-    }
 }

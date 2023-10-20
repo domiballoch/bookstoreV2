@@ -6,6 +6,7 @@ import dom.bookstore.dao.BookRepository;
 import dom.bookstore.domain.Basket;
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
+import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.exception.BookstoreStockException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,9 +20,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
 import static dom.bookstore.utils.BookStoreConstants.ERROR_SAVING_ENTITY;
 import static dom.bookstore.utils.BookStoreConstants.NOT_ENOUGH_STOCK;
-import static dom.bookstore.utils.BookStoreConstants.OUT_OF_STOCK;
 
 @Slf4j
 @Service
@@ -111,10 +112,10 @@ public class BasketServiceImpl implements BasketService {
     public boolean inStock(long isbn, int quantity) {
         final Optional<Book> book = bookRepository.findById(isbn);
         if(!book.isPresent()) {
-            log.info("Book is out of stock with isbn:{}", isbn);
-            throw new BookstoreStockException(OUT_OF_STOCK, isbn);
+            log.info("Book is not found with isbn:{}", isbn);
+            throw new BookstoreNotFoundException(BOOK_NOT_FOUND, isbn);
         } else if(book.get().getStock() < quantity) {
-            log.info("Not enough books in stock for isbn:{}", isbn);
+            log.info("Book is out of stock for isbn:{}", isbn);
             log.info("Stock remaining is {}, Quantity required was {}", book.get().getStock(), quantity);
             throw new BookstoreStockException(NOT_ENOUGH_STOCK, isbn);
         }
@@ -141,7 +142,7 @@ public class BasketServiceImpl implements BasketService {
      * Calculates total of basket
      *
      * @param basketItems
-     * @return totalPrice
+     * @return
      */
     @Override
     public BigDecimal calculateBasket(List<BasketItem> basketItems) { //move this to order service
@@ -201,7 +202,7 @@ public class BasketServiceImpl implements BasketService {
      * Updates stock back to previous level by summing quantities
      *
      * @param isbn
-     * @return List<BasketItem>
+     * @return
      */
     @Transactional
     @Override

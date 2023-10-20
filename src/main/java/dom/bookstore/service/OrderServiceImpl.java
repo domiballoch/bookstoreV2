@@ -77,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetails submitOrder(Users user) {
         OrderItem orderItem;
-        OrderDetails orderDetails;
+        OrderDetails orderDetails = null;
         List<OrderItem> orderItems = new ArrayList<>();
 
         //get basket to add to order
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
         if(!foundUser.isPresent()) {
             userRepository.save(user);
             log.info("User not found so saving details {}", user);
-        } if(validateUser(Optional.of(user)) == false) {
+        } else if(validateUser(Optional.of(user)) == false) {
             log.info("User details from search do not match stored records");
             throw new BookstoreValidationException(INCORRECT_DETAILS);
         } else {

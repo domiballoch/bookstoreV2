@@ -9,15 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-//    @Value(value = "${spring.application.name}")
-//    private String name;
-//
-//    @Value(value = "${spring.application.description}")
-//    private String description;
-//
-//    @Value(value = "${spring.build.version})")
-//    private String version;
-
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI()

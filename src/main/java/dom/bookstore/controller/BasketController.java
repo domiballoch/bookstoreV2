@@ -2,6 +2,7 @@ package dom.bookstore.controller;
 
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.service.BasketService;
+import dom.bookstore.utils.BookStoreUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,9 @@ public class BasketController {
     @GetMapping(value = "/getBasket")
     public ResponseEntity<List<BasketItem>> getBasket() {
         List<BasketItem> basketItems = basketService.getBasket();
+        if(basketItems.isEmpty()) {
+            BookStoreUtils.noResultsFound(basketItems, "Basket");
+        }
         return new ResponseEntity<>(basketItems, HttpStatus.OK);
     }
 
