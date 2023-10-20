@@ -9,7 +9,7 @@
 
 <h4>Description</h4>
 Bookstore with rest functionality using get, post, delete, put
-<br/>To view API documentation - run project then visit: http://localhost:8080/bookstoreV2/swagger-ui/index.html
+<br/>To view API documentation - run project then visit: http://localhost:8080/bookstore/swagger-ui/index.html
 
 <h4>Prerequisites</h4>
 Java 11
