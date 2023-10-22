@@ -35,7 +35,7 @@ import java.util.List;
  * Otherwise use @JsonIgnore if its not required in the response
  * Alternatively use @JsonManagedReference (Parent) and @JsonBackReference (Child)
  */
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "order_details")

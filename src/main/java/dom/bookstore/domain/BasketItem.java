@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "basket_item")

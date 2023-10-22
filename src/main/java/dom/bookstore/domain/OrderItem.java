@@ -23,7 +23,7 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "order_item")

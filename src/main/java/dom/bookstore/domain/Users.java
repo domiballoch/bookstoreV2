@@ -25,7 +25,7 @@ import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.List;
 
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "users")

@@ -198,7 +198,6 @@ public class BasketServiceImpl implements BasketService {
      * First adds removed BasketItem(s) to separate list the compares against current BasketItem(s)
      * If Basket contains any then they get removed - avoiding ConcurrentModificationException of Stream
      *
-     * Deleting BasketItem cascades entity deletion from child to parent to remove basket entry
      * Updates stock back to previous level by summing quantities
      *
      * @param isbn

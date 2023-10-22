@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "book")

@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder(toBuilder = true)
+@Builder
 @Data
 @Entity
 @Table(name = "basket")
