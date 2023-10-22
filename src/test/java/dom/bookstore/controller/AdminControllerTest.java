@@ -3,8 +3,8 @@ package dom.bookstore.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dom.bookstore.domain.Book;
+import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.AdminService;
-import dom.bookstore.utils.TestDataUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +14,19 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
+import static dom.bookstore.utils.BookStoreConstants.USER_NOT_FOUND;
 import static dom.bookstore.utils.ControllerTestHelper.getResponseFrom;
+import static dom.bookstore.utils.TestDataUtils.BOOK_1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -42,17 +48,17 @@ public class AdminControllerTest {
     @SneakyThrows
     @Test
     public void addNewBookToBookstore() {
-        when(adminService.addNewBookToBookstore(any(Book.class))).thenReturn(TestDataUtils.BOOK_1);
+        when(adminService.addNewBookToBookstore(any(Book.class))).thenReturn(BOOK_1);
         final ResultActions resultActions =
                 mockMvc.perform(post("/rest/addNewBook")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(TestDataUtils.BOOK_1))
+                                .content(objectMapper.writeValueAsString(BOOK_1))
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
         final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo((TestDataUtils.BOOK_1));
+        assertThat(result).isEqualTo((BOOK_1));
         verify(adminService, times(1)).addNewBookToBookstore(any(Book.class));
     }
 
@@ -72,17 +78,17 @@ public class AdminControllerTest {
     @SneakyThrows
     @Test
     public void updateBookInBookstore() {
-        when(adminService.updateBookInBookstore(any(Book.class), any(Long.class))).thenReturn(TestDataUtils.BOOK_1);
+        when(adminService.updateBookInBookstore(any(Book.class), any(Long.class))).thenReturn(BOOK_1);
         final ResultActions resultActions =
                 mockMvc.perform(put("/rest/updateBook/{isbn}", 1)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(TestDataUtils.BOOK_1))
+                                .content(objectMapper.writeValueAsString(BOOK_1))
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
         final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo((TestDataUtils.BOOK_1));
+        assertThat(result).isEqualTo((BOOK_1));
         verify(adminService, times(1)).updateBookInBookstore(any(Book.class), any(Long.class));
     }
 }

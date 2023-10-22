@@ -75,7 +75,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(long userId) {
         log.info("Deleting user by id: {}", userId);
-        userRepository.deleteById(userId);
+        try {
+            userRepository.deleteById(userId);
+        } catch (BookstoreNotFoundException e) {
+            log.error(USER_NOT_FOUND , userId);
+        }
         log.info("Deleted user by id: {}", userId);
     }
 

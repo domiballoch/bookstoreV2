@@ -29,7 +29,7 @@ public class AdminServiceImpl implements AdminService {
      * @return
      */
     @Override
-    public Book addNewBookToBookstore(Book book) {
+    public Book addNewBookToBookstore(Book book) { //add check for duplication
         log.info("Adding new book to bookstore");
         final Book newBook = Book.builder()
                 .category(book.getCategory())
@@ -52,7 +52,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteBookFromBookstore(long isbn) {
         log.info("Deleting book from bookstore by isbn: {}", isbn);
-        bookRepository.deleteById(isbn);
+        try {
+            bookRepository.deleteById(isbn);
+        } catch(BookstoreNotFoundException e) {
+            log.error(BOOK_NOT_FOUND , isbn);
+        }
         log.info("Deleted book from bookstore by isbn: {}", isbn);
     }
 
