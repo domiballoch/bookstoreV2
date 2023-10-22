@@ -2,8 +2,9 @@ package dom.bookstore.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
-import dom.bookstore.service.AdminService;
+import dom.bookstore.service.BasketService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +14,25 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static dom.bookstore.utils.ControllerTestHelper.getResponseFrom;
+import java.util.Arrays;
+import java.util.List;
+
 import static dom.bookstore.utils.TestDataUtils.BOOK_1;
 import static org.assertj.core.api.Assertions.assertThat;
+import static dom.bookstore.utils.ControllerTestHelper.getResponseFrom;
+import static dom.bookstore.utils.TestDataUtils.BASKET_1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AdminController.class)
-public class AdminControllerTest {
+@WebMvcTest(BasketController.class)
+public class BasketControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,53 +41,51 @@ public class AdminControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private AdminService adminService;
+    private BasketService basketService;
 
 
     @SneakyThrows
     @Test
-    public void addNewBookToBookstore() {
-        when(adminService.addNewBookToBookstore(any(Book.class))).thenReturn(BOOK_1);
+    public void getBasket() {
+        when(basketService.getBasket()).thenReturn(Arrays.asList(BASKET_1));
         final ResultActions resultActions =
-                mockMvc.perform(post("/rest/addNewBook")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(BOOK_1))
-                                .accept(MediaType.APPLICATION_JSON_VALUE))
+                mockMvc.perform(get("/rest/getBasket")
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
-        final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo(BOOK_1);
-        verify(adminService, times(1)).addNewBookToBookstore(any(Book.class));
+        final List<BasketItem> result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
+        assertThat(result).isEqualTo(Arrays.asList(BASKET_1));
+        verify(basketService, times(1)).getBasket();
     }
 
     @SneakyThrows
     @Test
-    public void deleteBookFromBookstore() {
+    public void addNewBookToBasket() {
+        when(basketService.addBookToBasket(any(Long.class), any(Integer.class))).thenReturn(BASKET_1);
         final ResultActions resultActions =
-                mockMvc.perform(delete("/rest/deleteBook/{isbn}", 1)
+                mockMvc.perform(post("/rest/addBookToBasket/{isbn}/{quantity}", 1, 1)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(BASKET_1))
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
-        verify(adminService, times(1)).deleteBookFromBookstore(any(Long.class));
+        final BasketItem result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
+        assertThat(result).isEqualTo(BASKET_1);
+        verify(basketService, times(1)).addBookToBasket(any(Long.class), any(Integer.class));
     }
 
     @SneakyThrows
     @Test
-    public void updateBookInBookstore() {
-        when(adminService.updateBookInBookstore(any(Book.class), any(Long.class))).thenReturn(BOOK_1);
+    public void removeBookFromBasket() {
         final ResultActions resultActions =
-                mockMvc.perform(put("/rest/updateBook/{isbn}", 1)
+                mockMvc.perform(delete("/rest/removeBookFromBasket/{isbn}", 1)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .content(objectMapper.writeValueAsString(BOOK_1))
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
-        final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo(BOOK_1);
-        verify(adminService, times(1)).updateBookInBookstore(any(Book.class), any(Long.class));
+        verify(basketService, times(1)).removeBookFromBasket(any(Long.class));
     }
 }

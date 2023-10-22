@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.UserService;
-import dom.bookstore.utils.TestDataUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +59,7 @@ public class UserControllerTest {
                         .andExpect(status().isOk());
 
         final List<Users> result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo((USERLIST));
+        assertThat(result).isEqualTo(USERLIST);
         verify(userService, times(1)).findAllUsers();
     }
 
@@ -94,7 +93,7 @@ public class UserControllerTest {
                         .andExpect(status().isOk());
 
         final Users result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo((USER_1));
+        assertThat(result).isEqualTo(USER_1);
         verify(userService, times(1)).addNewUser(any(Users.class));
     }
 
@@ -124,7 +123,7 @@ public class UserControllerTest {
                         .andExpect(status().isOk());
 
         final Users result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo((USER_1));
+        assertThat(result).isEqualTo(USER_1);
         verify(userService, times(1)).updateUser(any(Users.class), any(Long.class));
     }
 
