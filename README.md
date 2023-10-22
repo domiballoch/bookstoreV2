@@ -1,6 +1,5 @@
 [![Actions Status](https://github.com/domiballoch/bookstoreV2/actions/workflows/maven.yml/badge.svg)](https://github.com/domiballoch/bookstoreV2/actions)
 [![codecov](https://codecov.io/gh/domiballoch/bookstoreV2/branch/master/graph/badge.svg?token=3DQWELQG2V)](https://codecov.io/gh/domiballoch/bookstoreV2)
-[![forthebadge](https://forthebadge.com/images/badges/not-a-bug-a-feature.svg)](https://forthebadge.com)
 
 <h1>Bookstore service</h1>
 
@@ -10,6 +9,7 @@ Bookstore with rest functionality using get, post, delete, put
 <br/>Design enables stock to go up and down per quantity when book(basket item) placed in basket(persisted)
 <br/>Order details with user details is then persisted and basket is deleted
 <br/>To view API documentation - run project then visit: http://localhost:8080/bookstore/swagger-ui/index.html
+<br/>Next task is to create a user login, then React front-end which uses KeyCloak for security
 
 <h4>Prerequisites</h4>
 Java 11
