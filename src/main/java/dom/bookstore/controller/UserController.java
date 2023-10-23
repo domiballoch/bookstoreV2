@@ -5,7 +5,6 @@ import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.UserService;
 import dom.bookstore.utils.BookStoreUtils;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.USER_NOT_FOUND;
 
-@Slf4j
 @RestController
 @RequestMapping(value = "/rest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {

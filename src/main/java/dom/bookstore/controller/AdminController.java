@@ -26,7 +26,7 @@ public class AdminController {
     @PostMapping(value = "/addNewBook")
     public ResponseEntity<Book> addNewBookToBookstore(@RequestBody Book book) {
         Book addedBook = adminService.addNewBookToBookstore(book);
-        return new ResponseEntity<>(addedBook, HttpStatus.OK); //Http.Status.CREATED?
+        return new ResponseEntity<>(addedBook, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteBook/{isbn}")

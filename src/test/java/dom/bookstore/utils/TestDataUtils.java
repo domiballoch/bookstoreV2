@@ -150,4 +150,7 @@ public class TestDataUtils {
             .orderItems(Arrays.asList(ORDER_ITEM_3))
             .totalOrderPrice(BookStoreUtils.calculateBasket(Arrays.asList(BASKET_3)))
             .orderDate(LocalDateTime.now().minusDays(1).truncatedTo(ChronoUnit.SECONDS)).build();
+
+    public static final List<OrderDetails> ORDERLIST = Arrays.asList(ORDER_DETAILS_1, ORDER_DETAILS_2, ORDER_DETAILS_3);
+
 }

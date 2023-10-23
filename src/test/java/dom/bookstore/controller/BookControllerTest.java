@@ -139,7 +139,7 @@ public class BookControllerTest {
 
     @Disabled
     @SneakyThrows
-    //@Test
+    @Test
     public void findBookBySearchTermNoContent() {
         when(bookService.findBookBySearchTermIgnoreCase(any(String.class))).thenReturn(any(List.class));
         final ResultActions resultActions =
@@ -152,7 +152,7 @@ public class BookControllerTest {
 
     @Disabled
     @SneakyThrows
-    //@Test
+    @Test
     public void findBookByCategoryNoContent() {
         when(bookService.findBooksByCategory(any(Category.class))).thenReturn(Collections.emptyList());
         final ResultActions resultActions =
