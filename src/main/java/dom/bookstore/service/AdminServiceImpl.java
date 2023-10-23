@@ -23,7 +23,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * Adds new book to bookstore by Json request
+     * Adds new book to bookstore
      *
      * @param book
      * @return
@@ -45,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * Deletes Book from Bookstore DB(Book table)
+     * Deletes Book from Bookstore
      *
      * @param isbn
      */
@@ -61,7 +61,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * Updates book in bookstore by Json request
+     * Updates book in bookstore
      *
      * @param book
      * @return
