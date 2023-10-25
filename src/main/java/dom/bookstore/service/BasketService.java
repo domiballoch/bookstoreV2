@@ -14,9 +14,9 @@ public interface BasketService {
 
     boolean inStock(long isbn, int quantity);
 
-    BigDecimal calculateTotalPrice(Book book, int quantity);
+    //BigDecimal calculateTotalPrice(Book book, int quantity);
 
-    BigDecimal calculateBasket(List<BasketItem> basketItems);
+    //BigDecimal calculateBasket(List<BasketItem> basketItems);
 
     Book reduceStock(Book book, int quantity);
 

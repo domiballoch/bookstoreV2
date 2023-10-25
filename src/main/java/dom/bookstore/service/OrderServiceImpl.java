@@ -8,7 +8,7 @@ import dom.bookstore.domain.OrderDetails;
 import dom.bookstore.domain.OrderItem;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreBasketException;
-import dom.bookstore.exception.BookstoreValidationException;
+import dom.bookstore.utils.BookStoreUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.BASKET_IS_EMPTY;
 import static dom.bookstore.utils.BookStoreConstants.ERROR_SAVING_ENTITY;
-import static dom.bookstore.utils.BookStoreConstants.INCORRECT_DETAILS;
 
 @Slf4j
 @Service
@@ -77,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDetails submitOrder(Users user) {
         OrderItem orderItem;
-        OrderDetails orderDetails = null;
+        OrderDetails orderDetails;
         List<OrderItem> orderItems = new ArrayList<>();
 
         //get basket to add to order
@@ -89,22 +88,24 @@ public class OrderServiceImpl implements OrderService {
         }
 
         //get user from repository if exists - if not then save new user details
-        final Optional<Users> foundUser = userRepository.findById(user.getUserId());
+        final Optional<Users> foundUser = userRepository.findUserByUserDetailsIgnoreCase(user.getFirstName(),
+                user.getLastName(), user.getAddressLine1(), user.getAddressLine2(), user.getPostCode());
         if(!foundUser.isPresent()) {
             userRepository.save(user);
             log.info("User not found so saving details {}", user);
-        } else if(validateUser(Optional.of(user)) == false) {
-            log.info("User details from search do not match stored records");
-            throw new BookstoreValidationException(INCORRECT_DETAILS);
+        //} else if(validateUser(Optional.of(user)) == false) {
+            //log.info("User details from search do not match stored records");
+            //throw new BookstoreValidationException(INCORRECT_DETAILS);
         } else {
             log.info("User found, saving order details {}", user);
+            user.setUserId(foundUser.get().getUserId()); //if user is validated as a match userId is taken from result
         }
 
             //set order details
             orderDetails = OrderDetails.builder()
                     .orderDate(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
                     .users(user)
-                    .totalOrderPrice(basketService.calculateBasket(basketItemRepository.findAll()))
+                    .totalOrderPrice(BookStoreUtils.calculateBasket(basketItemRepository.findAll()))
                     .build();
 
             //set order items from basket
@@ -120,6 +121,7 @@ public class OrderServiceImpl implements OrderService {
 
             //set orderDetails with orderItems - bi-directional
             orderDetails.setOrderItems(orderItems);
+            //user.setOrderDetails(Arrays.asList(orderDetails));
 
             //Save orderDetails - cascade to OrderItems (parent/child)
             try {
@@ -140,8 +142,8 @@ public class OrderServiceImpl implements OrderService {
      * @param user
      * @return
      */
-    private boolean validateUser(final Optional<Users> user) {
-        final Optional<Users> foundUser = userRepository.findById(user.get().getUserId());
+    private boolean validateUser(Optional<Users> user) {
+        Optional<Users> foundUser = userRepository.findById(user.get().getUserId());
         return user.get().equals(foundUser.get()) ? true : false;
     }
 

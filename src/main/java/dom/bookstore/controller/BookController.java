@@ -53,7 +53,7 @@ public class BookController {
         public ResponseEntity<List<Book>> findBooksBySearchTerm(@PathVariable String search) {
             List<Book> results = bookService.findBookBySearchTermIgnoreCase(search);
             if(results.isEmpty()) {
-                BookStoreUtils.noResultsFound(results, search);
+                BookStoreUtils.noResultsFound(results, search); //double check this
             }
             return new ResponseEntity<>(results, HttpStatus.OK);
         }

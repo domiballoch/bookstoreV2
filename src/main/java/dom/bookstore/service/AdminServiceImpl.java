@@ -29,19 +29,11 @@ public class AdminServiceImpl implements AdminService {
      * @return
      */
     @Override
-    public Book addNewBookToBookstore(Book book) { //add check for duplication
+    public Book addNewBookToBookstore(Book book) { //check for duplicate
         log.info("Adding new book to bookstore");
-        final Book newBook = Book.builder()
-                .category(book.getCategory())
-                .title(book.getTitle())
-                .author(book.getAuthor())
-                .price(book.getPrice())
-                .stock(book.getStock())
-                .build();
-        bookRepository.save(newBook);
-
-        log.info("New book added to bookstore: {}", newBook);
-        return newBook;
+        bookRepository.save(book);
+        log.info("New book added to bookstore: {}", book);
+        return book;
     }
 
     /**
@@ -68,8 +60,7 @@ public class AdminServiceImpl implements AdminService {
                 .orElseThrow(() -> new BookstoreNotFoundException(BOOK_NOT_FOUND, isbn)));
         log.info("Updating book: {}", foundBook);
         bookRepository.delete(foundBook.get());
-        //book.setIsbn(isbn);
-        book.toBuilder().isbn(isbn).build();
+        book.setIsbn(isbn);
         bookRepository.save(book);
         log.info("Saving book: {}", book);
         return book;

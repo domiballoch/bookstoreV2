@@ -54,19 +54,11 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    public Users addNewUser(Users user) {
+    public Users addNewUser(Users user) { //check for duplicate
         log.info("Adding new user");
-        final Users newUser = Users.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .addressLine1(user.getAddressLine1())
-                .addressLine2(user.getAddressLine2())
-                .postCode(user.getPostCode())
-                .build();
-        userRepository.save(newUser);
-
-        log.info("New user added: {}", newUser.toString());
-        return newUser;
+        userRepository.save(user);
+        log.info("New user added: {}", user);
+        return user;
     }
 
     /**
@@ -96,7 +88,6 @@ public class UserServiceImpl implements UserService {
         log.info("Updating user: {}", foundUser);
         userRepository.delete(foundUser.get());
         user.setUserId(userId);
-        //user.toBuilder().userId(userId).build();
         userRepository.save(user);
         log.info("Saving user: {}", user);
         return user;

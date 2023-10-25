@@ -8,6 +8,7 @@ import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.exception.BookstoreStockException;
+import dom.bookstore.utils.BookStoreUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -46,7 +47,7 @@ public class BasketServiceImpl implements BasketService {
      */
     public List<BasketItem> getBasket() {
         List<BasketItem> basketItems = basketItemRepository.findAll();
-        log.info("Total price of basket is {} ", calculateBasket(basketItems));
+        log.info("Total price of basket is {} ", BookStoreUtils.calculateBasket(basketItems));
         return basketItems;
     }
 
@@ -84,7 +85,7 @@ public class BasketServiceImpl implements BasketService {
                 .basket(basket) //set basketItem with basket - bi-directional
                 .book(updatededBook)
                 .quantity(quantity)
-                .totalPrice(calculateTotalPrice(updatededBook, quantity))
+                .totalPrice(BookStoreUtils.calculateTotalPrice(updatededBook, quantity))
                 .build();
 
         //set basket with basketItems - bi-directional
@@ -122,34 +123,6 @@ public class BasketServiceImpl implements BasketService {
         log.info("Book is in stock for isbn:{}", isbn);
         final int inStock = book.get().getStock();
         return inStock > 0;
-    }
-
-    /**
-     * Calculates total of item where quantity is > 1
-     *
-     * @param book
-     * @param quantity
-     * @return
-     */
-    @Override
-    public BigDecimal calculateTotalPrice(Book book, int quantity) {
-        return book.getPrice().multiply(new BigDecimal(quantity)
-                .setScale(2, RoundingMode.HALF_UP)
-                .stripTrailingZeros());
-    }
-
-    /**
-     * Calculates total of basket
-     *
-     * @param basketItems
-     * @return
-     */
-    @Override
-    public BigDecimal calculateBasket(List<BasketItem> basketItems) { //move this to order service
-        return basketItems.stream()
-                .map(BasketItem::getBook)
-                .map(Book::getPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     /**
