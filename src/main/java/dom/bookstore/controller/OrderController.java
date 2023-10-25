@@ -21,6 +21,9 @@ import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.ORDER_NOT_FOUND;
 
+/**
+ * Exceptions handled by controller advice
+ */
 @RestController
 @RequestMapping(value = "/rest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class OrderController {

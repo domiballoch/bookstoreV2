@@ -52,11 +52,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteBookFromBookstore(long isbn) {
         log.info("Deleting book from bookstore by isbn: {}", isbn);
-        try {
             bookRepository.deleteById(isbn);
-        } catch(BookstoreNotFoundException e) {
-            log.error(BOOK_NOT_FOUND , isbn);
-        }
         log.info("Deleted book from bookstore by isbn: {}", isbn);
     }
 
@@ -72,7 +68,8 @@ public class AdminServiceImpl implements AdminService {
                 .orElseThrow(() -> new BookstoreNotFoundException(BOOK_NOT_FOUND, isbn)));
         log.info("Updating book: {}", foundBook);
         bookRepository.delete(foundBook.get());
-        book.setIsbn(isbn);
+        //book.setIsbn(isbn);
+        book.toBuilder().isbn(isbn).build();
         bookRepository.save(book);
         log.info("Saving book: {}", book);
         return book;

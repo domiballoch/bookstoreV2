@@ -7,11 +7,13 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.USER_NOT_FOUND;
 
+@Transactional
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -75,11 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(long userId) {
         log.info("Deleting user by id: {}", userId);
-        try {
             userRepository.deleteById(userId);
-        } catch (BookstoreNotFoundException e) {
-            log.error(USER_NOT_FOUND , userId);
-        }
         log.info("Deleted user by id: {}", userId);
     }
 
@@ -98,6 +96,7 @@ public class UserServiceImpl implements UserService {
         log.info("Updating user: {}", foundUser);
         userRepository.delete(foundUser.get());
         user.setUserId(userId);
+        //user.toBuilder().userId(userId).build();
         userRepository.save(user);
         log.info("Saving user: {}", user);
         return user;

@@ -98,6 +98,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BookstoreValidationException(INCORRECT_DETAILS);
         } else {
             log.info("User found, saving order details {}", user);
+        }
 
             //set order details
             orderDetails = OrderDetails.builder()
@@ -127,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
                 log.error(ERROR_SAVING_ENTITY, e.getMessage());
             }
             log.info("Order complete: {}", orderDetails);
-        }
+
         basketService.clearBasketAfterOrder(basketItems);
 
         return orderDetails;

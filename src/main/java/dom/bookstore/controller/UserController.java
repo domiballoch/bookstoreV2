@@ -22,6 +22,9 @@ import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.USER_NOT_FOUND;
 
+/**
+ * Exceptions handled by controller advice
+ */
 @RestController
 @RequestMapping(value = "/rest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
@@ -54,7 +57,7 @@ public class UserController {
     @PostMapping(value = "/addNewUser")
     public ResponseEntity<Users> addNewUser(@RequestBody Users user) {
         Users addedUser = userService.addNewUser(user);
-        return new ResponseEntity<>(addedUser, HttpStatus.OK); //Http.Status.CREATED?
+        return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/deleteUser/{userId}")

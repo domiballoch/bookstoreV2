@@ -26,6 +26,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -52,14 +53,14 @@ public class Book implements Serializable {
     private Category category;
 
     @NotEmpty(message = "Title must not be empty")
-    @Max(value = 100, message = "Title length must be less than one hundred chars")
-    @Min(value = 1, message = "Title length must be greater than zero")
+    @Size(max = 100, message = "Title length must be less than one hundred chars")
+    @Size(min = 1, message = "Title length must be greater than zero")
     @Column(name = "title")
     private String title;
 
     @NotEmpty(message = "Author must not be empty")
-    @Max(value = 50, message = "Author length must be less than fifty chars")
-    @Min(value = 1, message = "Author length must be greater than zero")
+    @Size(max = 50, message = "Author length must be less than fifty chars")
+    @Size(min = 1, message = "Author length must be greater than zero")
     @Column(name = "author")
     private String author;
 

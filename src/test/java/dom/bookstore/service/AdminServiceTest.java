@@ -2,6 +2,7 @@ package dom.bookstore.service;
 
 import dom.bookstore.dao.BookRepository;
 import dom.bookstore.domain.Book;
+import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.utils.TestDataUtils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,9 +13,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
 import static dom.bookstore.utils.TestDataUtils.BOOK_1;
 import static dom.bookstore.utils.TestDataUtils.BOOK_2;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -57,5 +61,17 @@ public class AdminServiceTest {
 
         assertThat(updatedBook).isEqualTo(newBookDetails);
         verify(bookRepository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    public void shouldThrowBookstoreNotFoundException_WhenUpdateOneBook(){
+        final long isbn = 99999;
+        Exception exception = assertThrows(BookstoreNotFoundException.class, () -> {
+            adminServiceImpl.updateBookInBookstore(BOOK_1, isbn);
+        });
+        final String expectedMessage = BOOK_NOT_FOUND;
+        final String actualMessage = exception.getMessage();
+
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 }
