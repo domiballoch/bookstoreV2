@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +41,7 @@ public class UserController {
     public ResponseEntity<List<Users>> findAllUsers() {
         List<Users> userList = userService.findAllUsers();
         if(userList.isEmpty()) {
-            BookStoreUtils.noResultsFound(userList, "All users");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/addNewUser")
-    public ResponseEntity<Users> addNewUser(@RequestBody Users user) {
+    public ResponseEntity<Users> addNewUser(@Valid @RequestBody Users user) {
         Users addedUser = userService.addNewUser(user);
         return new ResponseEntity<>(addedUser, HttpStatus.OK);
     }
@@ -68,7 +69,7 @@ public class UserController {
 
     //Using PUT for idempotency - resending the whole Entity
     @PutMapping(value = "/updateUser/{userId}")
-    public ResponseEntity<Users> updateUser(@RequestBody Users user, @PathVariable long userId) {
+    public ResponseEntity<Users> updateUser(@Valid @RequestBody Users user, @PathVariable long userId) {
         Users updatedUser = userService.updateUser(user, userId);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }

@@ -20,7 +20,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> findBookBySearchTermIgnoreCase(@Param("search") String search);
 
     @Query(value = "SELECT stock FROM book b WHERE b.isbn = :isbn", nativeQuery = true)
-    int getBookStock(@Param("isbn") long isbn);
+    Integer getBookStock(@Param("isbn") long isbn);
 
     @Transactional
     @Modifying

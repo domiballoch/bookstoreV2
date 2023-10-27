@@ -12,7 +12,7 @@ public interface BookService {
 
     Optional<Book> findBookByIsbn(long isbn);
 
-    int getBookStock(long isbn);
+    Integer getBookStock(long isbn);
 
     boolean checkStock(long isbn);
 

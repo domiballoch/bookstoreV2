@@ -93,9 +93,6 @@ public class OrderServiceImpl implements OrderService {
         if(!foundUser.isPresent()) {
             userRepository.save(user);
             log.info("User not found so saving details {}", user);
-        //} else if(validateUser(Optional.of(user)) == false) {
-            //log.info("User details from search do not match stored records");
-            //throw new BookstoreValidationException(INCORRECT_DETAILS);
         } else {
             log.info("User found, saving order details {}", user);
             user.setUserId(foundUser.get().getUserId()); //if user is validated as a match userId is taken from result
@@ -137,7 +134,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     /**
-     * Validate user request matches user in repository
+     * Validate user request matches user in repository - not used
      *
      * @param user
      * @return

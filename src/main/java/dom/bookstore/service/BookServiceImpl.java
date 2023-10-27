@@ -57,9 +57,9 @@ public class BookServiceImpl implements BookService {
      */
     //@Cacheable("bookstock")
     @Override
-    public int getBookStock(long isbn) {
+    public Integer getBookStock(long isbn) {
         log.info("Getting book stock by isbn: {}", isbn);
-        final int bookStock = bookRepository.getBookStock(isbn);
+        Integer bookStock = bookRepository.getBookStock(isbn);
         log.info("Current stock of item: {}", bookStock);
         return bookStock;
     }
@@ -73,7 +73,7 @@ public class BookServiceImpl implements BookService {
     //@Cacheable("checkstock)")
     @Override
     public boolean checkStock(long isbn) {
-        final Optional<Book> book = bookRepository.findById(isbn);
+        Optional<Book> book = bookRepository.findById(isbn);
         if(!book.isPresent()) {
             log.info("Book is not found with isbn:{}", isbn);
             throw new BookstoreNotFoundException(BOOK_NOT_FOUND, isbn);
@@ -82,7 +82,7 @@ public class BookServiceImpl implements BookService {
             throw new BookstoreStockException(NOT_ENOUGH_STOCK, isbn);
         }
         log.info("Book is in stock for isbn:{} Stock remaining is {}", isbn, book.get().getStock());
-        final int inStock = book.get().getStock();
+        int inStock = book.get().getStock();
         return inStock > 0;
     }
 

@@ -26,6 +26,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -45,6 +46,7 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "isbn")
+
     private Long isbn;
 
     @NotNull(message = "Category cannot be null")
@@ -72,6 +74,7 @@ public class Book implements Serializable {
     private BigDecimal price;
 
     @NotNull(message = "Stock cannot be null")
+    @Pattern(regexp = "^[0-9]*$", message = "Stock must only contain numbers")
     @Column(name = "stock")
     private int stock;
 

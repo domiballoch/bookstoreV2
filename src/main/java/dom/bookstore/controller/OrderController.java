@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
 import static dom.bookstore.utils.BookStoreConstants.ORDER_NOT_FOUND;
 
 /**
@@ -38,7 +40,7 @@ public class OrderController {
     public ResponseEntity<List<OrderDetails>> findAllOrders() {
         List<OrderDetails> orderDetails = orderService.findAllOrders();
         if(orderDetails.isEmpty()) {
-            BookStoreUtils.noResultsFound(orderDetails, "All orders");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
