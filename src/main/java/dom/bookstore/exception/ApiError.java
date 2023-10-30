@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +20,7 @@ public class ApiError {
     private String debugMessage;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
+    private List<String> errors;
 
     private ApiError() {
         timestamp = LocalDateTime.now();
@@ -46,11 +48,6 @@ public class ApiError {
 
     ApiError(HttpStatus status, Throwable ex, long input) {
         this(status, ex);
-        this.input = input;
-    }
-
-    ApiError(HttpStatus status, String message, Throwable ex, long input) {
-        this(status, message, ex);
         this.input = input;
     }
 }

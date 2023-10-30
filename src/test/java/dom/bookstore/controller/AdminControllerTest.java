@@ -49,7 +49,7 @@ public class AdminControllerTest {
                                 .content(objectMapper.writeValueAsString(BOOK_1))
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
-                        .andExpect(status().isOk());
+                        .andExpect(status().isCreated());
 
         final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
         assertThat(result).isEqualTo(BOOK_1);

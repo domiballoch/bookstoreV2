@@ -1,6 +1,7 @@
 package dom.bookstore.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import dom.bookstore.exception.ValidateEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Digits;
@@ -26,7 +28,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -46,13 +47,16 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "isbn")
-
     private Long isbn;
 
     @NotNull(message = "Category cannot be null")
     @Enumerated(EnumType.STRING)
     @Column(name = "category")
     private Category category;
+
+    @Transient
+    @ValidateEnum(enumClass = Category.class, message = "Please select a valid category")
+    private String categoryTypeString;
 
     @NotEmpty(message = "Title must not be empty")
     @Size(max = 100, message = "Title length must be less than one hundred chars")
@@ -74,7 +78,8 @@ public class Book implements Serializable {
     private BigDecimal price;
 
     @NotNull(message = "Stock cannot be null")
-    @Pattern(regexp = "^[0-9]*$", message = "Stock must only contain numbers")
+    @Min(value = 0, message = "Stock must only contain numbers with a minimum of zero")
+    @Max(value = 9999, message = "Stock must only contain numbers with a maximum of 9999")
     @Column(name = "stock")
     private int stock;
 
