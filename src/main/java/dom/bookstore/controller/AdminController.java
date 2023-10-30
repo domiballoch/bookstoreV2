@@ -29,7 +29,7 @@ public class AdminController {
     }
 
     @PostMapping(value = "/addNewBook")
-    public ResponseEntity<Book> addNewBookToBookstore(@RequestBody @Valid Book book) {
+    public ResponseEntity<Book> addNewBookToBookstore(@Valid @RequestBody Book book) {
         Book addedBook = adminService.addNewBookToBookstore(book);
         return new ResponseEntity<>(addedBook, HttpStatus.CREATED);
     }
@@ -42,7 +42,7 @@ public class AdminController {
 
     //Using PUT for idempotency - resending the whole Entity
     @PutMapping(value = "/updateBook/{isbn}")
-    public ResponseEntity<Book> updateBookInBookstore(@RequestBody @Valid Book book, @PathVariable long isbn) {
+    public ResponseEntity<Book> updateBookInBookstore(@Valid @RequestBody Book book, @PathVariable long isbn) {
         Book updatedBook = adminService.updateBookInBookstore(book, isbn);
         return new ResponseEntity<>(updatedBook, HttpStatus.OK);
     }
