@@ -16,7 +16,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByCategory(Category category);
 
-    @Query(value = "SELECT * FROM book b WHERE b.title LIKE CONCAT('%', :search, '%')", nativeQuery=true)
+    @Query(value = "SELECT * FROM book b WHERE b.title LIKE CONCAT('%', :search, '%')", nativeQuery = true)
     List<Book> findBookBySearchTermIgnoreCase(@Param("search") String search);
 
     @Query(value = "SELECT stock FROM book b WHERE b.isbn = :isbn", nativeQuery = true)

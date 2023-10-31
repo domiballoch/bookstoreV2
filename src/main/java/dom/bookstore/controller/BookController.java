@@ -4,7 +4,6 @@ import dom.bookstore.domain.Book;
 import dom.bookstore.domain.Category;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.BookService;
-import dom.bookstore.utils.BookStoreUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,6 @@ import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
 /**
  * Exceptions handled by controller advice
  */
-@Slf4j
 @RestController
 @RequestMapping(value = "/rest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BookController {
@@ -72,8 +70,7 @@ public class BookController {
 
         @GetMapping(value = "/getBookstock/{isbn}")
         public ResponseEntity<Integer> getBookstock(@PathVariable long isbn) {
-            Integer stock;
-            stock = bookService.getBookStock(isbn);
+            Integer stock = bookService.getBookStock(isbn);
             if(Objects.isNull(stock)) {
                 throw new BookstoreNotFoundException(BOOK_NOT_FOUND , isbn);
             }
