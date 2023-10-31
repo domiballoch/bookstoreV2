@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static dom.bookstore.utils.TestDataUtils.BOOK_1;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -87,17 +86,23 @@ public class BookRepositoryTest {
 
     @Test
     public void saveOneBook() {
-        Book book = BOOK_1;
-        book.setIsbn(1006L);
+        Book book = Book.builder()
+                .title("title6")
+                .author("author6")
+                .category(Category.TECHNOLOGY)
+                .price(BigDecimal.valueOf(4.99))
+                .stock(10)
+                .build();
+
         bookRepository.save(book);
         List<Book> bookList = bookRepository.findAll();
 
         assertThat(bookRepository.count()).isEqualTo(6);
         assertThat(bookList.size()).isEqualTo(6);
         assertThat(bookList.get(5).getIsbn()).isEqualTo(1006L);
-        assertThat(bookList.get(5).getTitle()).isEqualTo("title1");
-        assertThat(bookList.get(5).getAuthor()).isEqualTo("author1");
-        assertThat(bookList.get(5).getCategory()).isEqualTo(Category.COOKING);
+        assertThat(bookList.get(5).getTitle()).isEqualTo("title6");
+        assertThat(bookList.get(5).getAuthor()).isEqualTo("author6");
+        assertThat(bookList.get(5).getCategory()).isEqualTo(Category.TECHNOLOGY);
         assertThat(bookList.get(5).getPrice()).isEqualTo(BigDecimal.valueOf(4.99));
         assertThat(bookList.get(5).getStock()).isEqualTo(10);
     }

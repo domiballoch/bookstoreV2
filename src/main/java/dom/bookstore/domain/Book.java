@@ -81,7 +81,7 @@ public class Book implements Serializable {
     @Min(value = 0, message = "Stock must only contain numbers with a minimum of zero")
     @Max(value = 9999, message = "Stock must only contain numbers with a maximum of 9999")
     @Column(name = "stock")
-    private int stock;
+    private Integer stock;
 
     @JsonIgnore
     @OneToMany(mappedBy = "book", fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, orphanRemoval = true)

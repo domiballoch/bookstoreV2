@@ -7,7 +7,6 @@ import dom.bookstore.domain.Category;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.BookService;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -129,7 +128,19 @@ public class BookControllerTest {
 
     @SneakyThrows
     @Test
-    public void shouldThrow_BookStoreNotFoundException() {
+    public void findAllBooks_shouldThrow_NoContent() {
+        when(bookService.findAllBooks()).thenReturn(Collections.emptyList());
+        final ResultActions resultActions =
+                mockMvc.perform(get("/rest/findAllBooks")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .andDo(print())
+                        .andExpect(status().isNoContent());
+        verify(bookService, times(1)).findAllBooks();
+    }
+
+    @SneakyThrows
+    @Test
+    public void findBook_shouldThrow_BookStoreNotFoundException() {
         mockMvc.perform(get("/rest/findBook/{isbn}", 99999)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
@@ -137,29 +148,34 @@ public class BookControllerTest {
                 .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
     }
 
-    @Disabled
     @SneakyThrows
     @Test
-    public void findBookBySearchTermNoContent() {
-        when(bookService.findBookBySearchTermIgnoreCase(any(String.class))).thenReturn(any(List.class));
-        final ResultActions resultActions =
-                mockMvc.perform(get("/rest/search/{search}", "abcdefg")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                        .andDo(print())
-                        .andExpect(status().isNotFound());
-        verify(bookService, times(1)).findBookBySearchTermIgnoreCase(any(String.class));
+    public void findBookBySearchTerm_shouldThrow_BookStoreNotFoundException() {
+        mockMvc.perform(get("/rest/search/{search}", "random")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
+                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
     }
 
-    @Disabled
     @SneakyThrows
     @Test
-    public void findBookByCategoryNoContent() {
-        when(bookService.findBooksByCategory(any(Category.class))).thenReturn(Collections.emptyList());
-        final ResultActions resultActions =
-                mockMvc.perform(get("/rest/category/{category}", Category.LITERATURE)
-                                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                        .andDo(print())
-                        .andExpect(status().isNotFound());
-        verify(bookService, times(1)).findBooksByCategory(any(Category.class));
+    public void findBookByCategory_shouldThrow_BookStoreNotFoundException() {
+        mockMvc.perform(get("/rest/category/{category}", Category.NONE)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
+                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
+    }
+
+    @SneakyThrows
+    @Test
+    public void getBookstock_shouldThrow_BookStoreNotFoundException() {
+        when(bookService.getBookStock(any(Long.class))).thenReturn(null);
+        mockMvc.perform(get("/rest/getBookstock/{isbn}", 99999)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isNotFound())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
+                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
     }
 }
