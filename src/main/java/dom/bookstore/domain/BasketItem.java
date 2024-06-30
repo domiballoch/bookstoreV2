@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,8 +57,8 @@ public class BasketItem {
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore //cascade remove basket parent entry when item is deleted
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE}, optional = false)
     @JoinColumn(name="fkBasketId")
     private Basket basket;
 

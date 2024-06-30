@@ -113,7 +113,7 @@ public class UserControllerTest {
     @SneakyThrows
     @Test
     public void updateUser() {
-        when(userService.updateUser(any(Users.class), any(Long.class))).thenReturn(USER_1);
+        when(userService.updateUser(any(Long.class), any(Users.class))).thenReturn(USER_1);
         final ResultActions resultActions =
                 mockMvc.perform(put("/rest/updateUser/{userId}", 1)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -124,7 +124,7 @@ public class UserControllerTest {
 
         final Users result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
         assertThat(result).isEqualTo(USER_1);
-        verify(userService, times(1)).updateUser(any(Users.class), any(Long.class));
+        verify(userService, times(1)).updateUser(any(Long.class), any(Users.class));
     }
 
     @SneakyThrows

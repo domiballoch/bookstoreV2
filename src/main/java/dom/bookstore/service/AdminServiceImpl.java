@@ -49,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     /**
-     * Updates book in bookstore
+     * Updates book in bookstore - book can be deleted and re-saved as no cascade
      *
      * @param book
      * @return

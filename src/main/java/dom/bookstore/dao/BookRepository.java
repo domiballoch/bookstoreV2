@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Using native SQL queries but best practice in prod code is to use JPQL
+ */
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 

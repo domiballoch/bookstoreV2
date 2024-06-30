@@ -70,7 +70,7 @@ public class UserController {
     //Using PUT for idempotency - resending the whole Entity
     @PutMapping(value = "/updateUser/{userId}")
     public ResponseEntity<Users> updateUser(@Valid @RequestBody Users user, @PathVariable long userId) {
-        Users updatedUser = userService.updateUser(user, userId);
+        Users updatedUser = userService.updateUser(userId, user);
         return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
