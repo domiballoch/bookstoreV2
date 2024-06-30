@@ -3,7 +3,6 @@ package dom.bookstore.controller;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.UserService;
-import dom.bookstore.utils.BookStoreUtils;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
