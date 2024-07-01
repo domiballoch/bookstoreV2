@@ -75,25 +75,12 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Updates user by id - user needs update function due to cascade order history on delete
+     * Updates user by id
      *
-     * @param user
      * @param userId
+     * @param user
      * @return
      */
-    //@SneakyThrows
-//    @Override
-//    public Users updateUserOld(Users user, long userId) {
-//        Optional<Users> foundUser = Optional.ofNullable(userRepository.findById(userId)
-//                .orElseThrow(() -> new BookstoreNotFoundException(USER_NOT_FOUND, userId)));
-//        log.info("Updating user: {}", foundUser);
-//        userRepository.delete(foundUser.get());
-//        user.setUserId(userId);
-//        userRepository.save(user);
-//        log.info("Saving user: {}", user);
-//        return user;
-//    }
-
     @Transactional
     @Override
     public Users updateUser(long userId, Users user) {
