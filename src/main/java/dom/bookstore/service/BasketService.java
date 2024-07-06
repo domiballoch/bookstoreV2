@@ -3,7 +3,6 @@ package dom.bookstore.service;
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.Book;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface BasketService {

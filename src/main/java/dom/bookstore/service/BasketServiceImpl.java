@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,7 +93,8 @@ public class BasketServiceImpl implements BasketService {
         try {
             basketRepository.save(basket);
         } catch (Exception e) {
-            log.error(ERROR_SAVING_ENTITY, e.getMessage());
+            log.error(ERROR_SAVING_ENTITY, e);
+            throw new RuntimeException(ERROR_SAVING_ENTITY);
         }
         log.info("Book added to basket: {}", updatededBook);
 

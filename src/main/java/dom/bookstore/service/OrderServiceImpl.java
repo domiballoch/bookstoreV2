@@ -9,13 +9,12 @@ import dom.bookstore.domain.OrderDetails;
 import dom.bookstore.domain.OrderItem;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreBasketException;
+import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.utils.BookStoreUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.BASKET_IS_EMPTY;
 import static dom.bookstore.utils.BookStoreConstants.ERROR_SAVING_ENTITY;
+import static dom.bookstore.utils.BookStoreConstants.USER_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -34,17 +34,13 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailsRepository orderDetailsRepository;
     private BasketService basketService;
 
-    private OrderItemRepository orderItemRepository;
-
 
     public OrderServiceImpl(BasketItemRepository basketItemRepository, UserRepository userRepository,
-                             OrderDetailsRepository orderDetailsRepository, BasketService basketService,
-    OrderItemRepository orderItemRepository) {
+                             OrderDetailsRepository orderDetailsRepository, BasketService basketService) {
         this.basketItemRepository = basketItemRepository;
         this.userRepository = userRepository;
         this.orderDetailsRepository = orderDetailsRepository;
         this.basketService = basketService;
-        this.orderItemRepository = orderItemRepository;
     }
 
     /**
@@ -81,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDetails submitOrder(Users user) throws Exception {
+    public OrderDetails submitOrder(Users user) throws RuntimeException {
         OrderItem orderItem;
         OrderDetails orderDetails;
         List<OrderItem> orderItems = new ArrayList<>();
@@ -99,9 +95,9 @@ public class OrderServiceImpl implements OrderService {
                 user.getLastName(), user.getAddressLine1(), user.getAddressLine2(), user.getPostCode());
         if(!foundUser.isPresent()) {
             userRepository.save(user);
-            log.info("User not found so saving details {}", user);
+            log.info("User not found in DB so saving entered details as new user {}", user);
         } else {
-            log.info("User found, saving order details {}", user);
+            log.info("User found in DB, using for order details {}", user);
             user.setUserId(foundUser.get().getUserId()); //if user is validated as a match userId is taken from result
         }
 
@@ -132,7 +128,7 @@ public class OrderServiceImpl implements OrderService {
                 orderDetailsRepository.save(orderDetails);
             } catch (Exception e) {
                 log.error(ERROR_SAVING_ENTITY, e);
-                throw new Exception(ERROR_SAVING_ENTITY); //change exceptions, add sql one and alter 500
+                throw new RuntimeException(ERROR_SAVING_ENTITY); //change exceptions, add sql one and alter 500
             }
             log.info("Order complete: {}", orderDetails);
 
@@ -148,6 +144,10 @@ public class OrderServiceImpl implements OrderService {
      * @return
      */
     private boolean validateUser(Optional<Users> user) {
+        if(!user.isPresent()) {
+            log.error("User not found for validation");
+            throw new BookstoreNotFoundException(USER_NOT_FOUND);
+        }
         Optional<Users> foundUser = userRepository.findById(user.get().getUserId());
         return user.get().equals(foundUser.get()) ? true : false;
     }

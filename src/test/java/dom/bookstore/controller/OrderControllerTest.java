@@ -88,8 +88,6 @@ public class OrderControllerTest {
         assertThat(result.getOrderDate()).isEqualTo(LocalDateTime.of(2022,03,01, 9,0,0));
     }
 
-
-    @Disabled
     @SneakyThrows
     @Test
     public void submitOrder() {
@@ -116,8 +114,6 @@ public class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
-                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), ORDER_NOT_FOUND));
+                .andExpect(result -> assertEquals(ORDER_NOT_FOUND, result.getResolvedException().getMessage()));
     }
-
-    //other exceptions in order service?
 }

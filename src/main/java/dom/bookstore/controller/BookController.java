@@ -71,7 +71,7 @@ public class BookController {
             if(Objects.isNull(stock)) {
                 throw new BookstoreNotFoundException(BOOK_NOT_FOUND , isbn);
             }
-            return new ResponseEntity(stock, HttpStatus.OK);
+            return new ResponseEntity<>(stock, HttpStatus.OK);
         }
 
 }

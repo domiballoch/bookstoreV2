@@ -112,8 +112,8 @@ public class BookControllerTest {
 
         final List<Book> results = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
         assertThat(results.size()).isEqualTo(2);
-        assertThat(results.contains("Tall Tales"));
-        assertThat(results.contains("Short Tales"));
+        assertThat(results.stream().anyMatch(b -> "Tall Tales".equals(b.getTitle())));
+        assertThat(results.stream().anyMatch(b -> "Short Tales".equals(b.getTitle())));
     }
 
     @SneakyThrows
@@ -177,7 +177,7 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
-                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
+                .andExpect(result -> assertEquals(BOOK_NOT_FOUND, result.getResolvedException().getMessage()));
     }
 
     @SneakyThrows
@@ -187,7 +187,7 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
-                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
+                .andExpect(result -> assertEquals(BOOK_NOT_FOUND, result.getResolvedException().getMessage()));
     }
 
     @SneakyThrows
@@ -197,7 +197,7 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
-                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
+                .andExpect(result -> assertEquals(BOOK_NOT_FOUND, result.getResolvedException().getMessage()));
     }
 
     @SneakyThrows
@@ -207,6 +207,6 @@ public class BookControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof BookstoreNotFoundException))
-                .andExpect(result -> assertEquals(result.getResolvedException().getMessage(), BOOK_NOT_FOUND));
+                .andExpect(result -> assertEquals(BOOK_NOT_FOUND, result.getResolvedException().getMessage()));
     }
 }

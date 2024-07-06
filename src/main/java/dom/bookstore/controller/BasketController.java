@@ -1,10 +1,7 @@
 package dom.bookstore.controller;
 
 import dom.bookstore.domain.BasketItem;
-import dom.bookstore.exception.BookstoreBasketException;
-import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.BasketService;
-import dom.bookstore.utils.BookStoreUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static dom.bookstore.utils.BookStoreConstants.BASKET_IS_EMPTY;
-import static dom.bookstore.utils.BookStoreConstants.ORDER_NOT_FOUND;
 
 /**
  * Exceptions handled by controller advice

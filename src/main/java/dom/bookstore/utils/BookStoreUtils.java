@@ -25,7 +25,7 @@ public class BookStoreUtils {
      */
     public static <T> ResponseEntity<T> noResultsFound(T t, T r) {
         log.info("No results found: {}", r);
-        return new ResponseEntity<T>(t, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(t, HttpStatus.NOT_FOUND);
     }
 
     /**
