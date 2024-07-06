@@ -3,7 +3,6 @@ package dom.bookstore.service;
 import dom.bookstore.dao.UserRepository;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

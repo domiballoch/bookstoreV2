@@ -4,7 +4,6 @@ import dom.bookstore.domain.OrderDetails;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.OrderService;
-import dom.bookstore.utils.BookStoreUtils;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
 import static dom.bookstore.utils.BookStoreConstants.ORDER_NOT_FOUND;
 
 /**
@@ -45,16 +43,15 @@ public class OrderController {
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
-    @SneakyThrows
     @GetMapping(value = "/findOrder/{orderDetailsId}")
     public ResponseEntity<Optional<OrderDetails>> findOrderById(@PathVariable long orderDetailsId) {
-        Optional<OrderDetails> orderDetails = Optional.ofNullable(orderService.findOrderById(orderDetailsId))
-                .orElseThrow(() -> new BookstoreNotFoundException(ORDER_NOT_FOUND, orderDetailsId));
+        Optional<OrderDetails> orderDetails = Optional.ofNullable(orderService.findOrderById(orderDetailsId)
+                .orElseThrow(() -> new BookstoreNotFoundException(ORDER_NOT_FOUND, orderDetailsId)));
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }
 
     @PostMapping(value = "/submitOrder")
-    public ResponseEntity<OrderDetails> submitOrder(@RequestBody Users user) {
+    public ResponseEntity<OrderDetails> submitOrder(@RequestBody Users user) throws Exception {
         OrderDetails orderDetails = orderService.submitOrder(user);
         return new ResponseEntity<>(orderDetails, HttpStatus.OK);
     }

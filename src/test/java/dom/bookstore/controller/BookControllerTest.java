@@ -2,6 +2,7 @@ package dom.bookstore.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dom.bookstore.dao.BookRepository;
 import dom.bookstore.domain.Book;
 import dom.bookstore.domain.Category;
 import dom.bookstore.exception.BookstoreNotFoundException;
@@ -9,18 +10,23 @@ import dom.bookstore.service.BookService;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static dom.bookstore.utils.BookStoreConstants.BOOK_NOT_FOUND;
-import static dom.bookstore.utils.ControllerTestHelper.getResponseFrom;
+import static dom.bookstore.utils.TestUtils.getResponseFrom;
 import static dom.bookstore.utils.TestDataUtils.BOOKLIST;
 import static dom.bookstore.utils.TestDataUtils.BOOK_1;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +41,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(BookController.class)
+@Sql(scripts = {"classpath:test_data/repositoryTestData.sql"})
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class BookControllerTest {
 
     @Autowired
@@ -44,98 +53,121 @@ public class BookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
-    private BookService bookService;
+    @Autowired
+    private BookRepository bookRepository;
 
     @SneakyThrows
     @Test
     public void findAllBooks() {
-        when(bookService.findAllBooks()).thenReturn(BOOKLIST);
         final ResultActions resultActions =
                 mockMvc.perform(get("/rest/findAllBooks")
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
 
-        final List<Book> result = getResponseFrom(resultActions, objectMapper, new TypeReference<List<Book>>() {});
-        assertThat(result).isEqualTo((BOOKLIST));
-        verify(bookService, times(1)).findAllBooks();
+        final List<Book> result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
+        assertThat(result.size()).isEqualTo(5);
     }
 
     @SneakyThrows
     @Test
     public void findBookByIsbn() {
-        when(bookService.findBookByIsbn(1)).thenReturn(Optional.of(BOOK_1));
         final ResultActions resultActions =
-                mockMvc.perform(get("/rest/findBook/{isbn}", 1)
+                mockMvc.perform(get("/rest/findBook/{isbn}", 1001)
                                 .accept(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.isbn").value(1));
+                        .andExpect(status().isOk());
 
         final Book result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo(BOOK_1);
-        verify(bookService, times(1)).findBookByIsbn(any(Long.class));
+        assertThat(result.getCategory()).isEqualTo(Category.FICTION);
+        assertThat(result.getTitle()).isEqualTo("Tall Tales");
+        assertThat(result.getAuthor()).isEqualTo("Mr Fredrikson");
+        assertThat(result.getPrice()).isEqualTo(BigDecimal.valueOf(4.99));
+        assertThat(result.getStock()).isEqualTo(25);
+
     }
 
     @SneakyThrows
     @Test
-    public void findBookBySearchTerm() {
-        when(bookService.findBookBySearchTermIgnoreCase("ti")).thenReturn(List.of(BOOK_1));
+    public void findBookBySearchTermOneResult() {
         final ResultActions resultActions =
-                mockMvc.perform(get("/rest/search/{search}", "ti")
+                mockMvc.perform(get("/rest/search/{search}", "rose")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.[0].title").value("title1"));
+                        .andExpect(status().isOk());
 
         final List<Book> results = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(results.get(0).getTitle()).isEqualTo("title1");
-        assertThat(results.get(0)).isEqualTo(BOOK_1);
-        verify(bookService, times(1)).findBookBySearchTermIgnoreCase(any(String.class));
+        assertThat(results.size()).isEqualTo(1);
+        assertThat(results.get(0).getTitle()).isEqualTo("An English Rose");
     }
 
     @SneakyThrows
     @Test
-    public void findBookByCategory() {
-        when(bookService.findBooksByCategory(Category.COOKING)).thenReturn(List.of(BOOK_1));
+    public void findBookBySearchTermTwoResults() {
         final ResultActions resultActions =
-                mockMvc.perform(get("/rest/category/{category}", "COOKING")
+                mockMvc.perform(get("/rest/search/{search}", "tales")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.[0].category").value("COOKING"));
+                        .andExpect(status().isOk());
 
         final List<Book> results = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(results.get(0).getCategory()).isEqualTo(Category.COOKING);
-        assertThat(results.get(0)).isEqualTo(BOOK_1);
-        verify(bookService, times(1)).findBooksByCategory(any(Category.class));
+        assertThat(results.size()).isEqualTo(2);
+        assertThat(results.contains("Tall Tales"));
+        assertThat(results.contains("Short Tales"));
+    }
+
+    @SneakyThrows
+    @Test
+    public void findBookByCategoryOneResult() {
+        final ResultActions resultActions =
+                mockMvc.perform(get("/rest/category/{category}", "ROMANCE")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .andDo(print())
+                        .andExpect(status().isOk());
+
+        final List<Book> results = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
+        assertThat(results.size()).isEqualTo(1);
+        assertThat(results.get(0).getCategory()).isEqualTo(Category.ROMANCE);
+    }
+
+    @SneakyThrows
+    @Test
+    public void findBookByCategoryTwoResults() {
+        final ResultActions resultActions =
+                mockMvc.perform(get("/rest/category/{category}", "FICTION")
+                                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .andDo(print())
+                        .andExpect(status().isOk());
+        final List<Book> results = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
+        assertThat(results.size()).isEqualTo(2);
+        assertThat(results.stream().anyMatch(b -> "Tall Tales".equals(b.getTitle())));
+        assertThat(results.stream().anyMatch(b -> "Short Tales".equals(b.getTitle())));
     }
 
     @SneakyThrows
     @Test
     public void getBookstock() {
-        when(bookService.getBookStock(1)).thenReturn(10);
         final ResultActions resultActions =
-                mockMvc.perform(get("/rest/getBookstock/{isbn}", 1)
+                mockMvc.perform(get("/rest/getBookstock/{isbn}", 1001)
                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isOk());
         final int result = getResponseFrom(resultActions, objectMapper, new TypeReference<>() {});
-        assertThat(result).isEqualTo(10);
-        verify(bookService, times(1)).getBookStock(any(Long.class));
+        assertThat(result).isEqualTo(25);
     }
 
     @SneakyThrows
     @Test
     public void findAllBooks_shouldThrow_NoContent() {
-        when(bookService.findAllBooks()).thenReturn(Collections.emptyList());
+        bookRepository.deleteAll();
+
         final ResultActions resultActions =
                 mockMvc.perform(get("/rest/findAllBooks")
                                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .andDo(print())
                         .andExpect(status().isNoContent());
-        verify(bookService, times(1)).findAllBooks();
+
+        assertThat(bookRepository.findAll().size()).isEqualTo(0);
     }
 
     @SneakyThrows
@@ -171,7 +203,6 @@ public class BookControllerTest {
     @SneakyThrows
     @Test
     public void getBookstock_shouldThrow_BookStoreNotFoundException() {
-        when(bookService.getBookStock(any(Long.class))).thenReturn(null);
         mockMvc.perform(get("/rest/getBookstock/{isbn}", 99999)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isNotFound())

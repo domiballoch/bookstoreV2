@@ -3,7 +3,6 @@ package dom.bookstore.controller;
 import dom.bookstore.domain.Users;
 import dom.bookstore.exception.BookstoreNotFoundException;
 import dom.bookstore.service.UserService;
-import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +44,6 @@ public class UserController {
         return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
-    @SneakyThrows
     @GetMapping(value = "/findUser/{userId}")
     public ResponseEntity<Optional<Users>> findUserById(@PathVariable long userId) {
         Optional<Users> user = Optional.ofNullable(userService.findUserById(userId)

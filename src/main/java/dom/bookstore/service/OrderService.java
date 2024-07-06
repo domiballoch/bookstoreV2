@@ -3,6 +3,7 @@ package dom.bookstore.service;
 import dom.bookstore.domain.OrderDetails;
 import dom.bookstore.domain.Users;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,5 +15,5 @@ public interface OrderService {
 
     OrderDetails checkout();
 
-    OrderDetails submitOrder(Users user);
+    OrderDetails submitOrder(Users user) throws Exception;
 }

@@ -2,6 +2,7 @@ package dom.bookstore.service;
 
 import dom.bookstore.dao.BasketItemRepository;
 import dom.bookstore.dao.OrderDetailsRepository;
+import dom.bookstore.dao.OrderItemRepository;
 import dom.bookstore.dao.UserRepository;
 import dom.bookstore.domain.BasketItem;
 import dom.bookstore.domain.OrderDetails;
@@ -11,8 +12,10 @@ import dom.bookstore.exception.BookstoreBasketException;
 import dom.bookstore.utils.BookStoreUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -31,13 +34,17 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailsRepository orderDetailsRepository;
     private BasketService basketService;
 
+    private OrderItemRepository orderItemRepository;
+
 
     public OrderServiceImpl(BasketItemRepository basketItemRepository, UserRepository userRepository,
-                             OrderDetailsRepository orderDetailsRepository, BasketService basketService) {
+                             OrderDetailsRepository orderDetailsRepository, BasketService basketService,
+    OrderItemRepository orderItemRepository) {
         this.basketItemRepository = basketItemRepository;
         this.userRepository = userRepository;
         this.orderDetailsRepository = orderDetailsRepository;
         this.basketService = basketService;
+        this.orderItemRepository = orderItemRepository;
     }
 
     /**
@@ -74,7 +81,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public OrderDetails submitOrder(Users user) {
+    public OrderDetails submitOrder(Users user) throws Exception {
         OrderItem orderItem;
         OrderDetails orderDetails;
         List<OrderItem> orderItems = new ArrayList<>();
@@ -118,13 +125,14 @@ public class OrderServiceImpl implements OrderService {
 
             //set orderDetails with orderItems - bi-directional
             orderDetails.setOrderItems(orderItems);
-            //user.setOrderDetails(Arrays.asList(orderDetails));
 
             //Save orderDetails - cascade to OrderItems (parent/child)
             try {
+                log.info("Saving order: {}", orderDetails);
                 orderDetailsRepository.save(orderDetails);
             } catch (Exception e) {
-                log.error(ERROR_SAVING_ENTITY, e.getMessage());
+                log.error(ERROR_SAVING_ENTITY, e);
+                throw new Exception(ERROR_SAVING_ENTITY); //change exceptions, add sql one and alter 500
             }
             log.info("Order complete: {}", orderDetails);
 

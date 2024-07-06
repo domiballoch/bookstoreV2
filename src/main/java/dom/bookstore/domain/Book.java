@@ -55,6 +55,7 @@ public class Book implements Serializable {
     private Category category;
 
     @Transient
+    @JsonIgnore
     @ValidateEnum(enumClass = Category.class, message = "Please select a valid category")
     private String categoryTypeString;
 
